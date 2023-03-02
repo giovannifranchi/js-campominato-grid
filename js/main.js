@@ -85,17 +85,63 @@ function generateRandomNum(min, max){
     return randomNum;
 }
 
-function createBombsArray(arrayLenght){
+function createBombsArray(arrayLenght, input){
     const bombsArray = [];
     for(let i = 0; i < Math.floor(arrayLenght / 5); i++){
         const newBomb = generateRandomNum(0, arrayLenght - 1);
-        if(bombsArray.includes(newBomb)){
+        if(bombsArray.includes(newBomb) || newBomb === input){
             i--;
         }else{
             bombsArray.push(newBomb);
         }
     }
     return bombsArray;
+}
+
+function draw(input, elementArray, nearBombs, isCoincident){
+    const element = elementArray[input];
+    if(!isCoincident){
+        switch(nearBombs){
+            case 0:
+                element.classList.add('empty');
+                break;
+            case 1:
+                element.innerHTML = nearBombs;
+                element.classList.add('one');
+                break;
+            case 2:
+                element.innerHTML = nearBombs;
+                element.classList.add('two');
+                break;
+            case 3:
+                element.innerHTML = nearBombs;
+                element.classList.add('three');
+                break;
+            case 4:
+                element.innerHTML = nearBombs;
+                element.classList.add('four');
+                break;
+            case 5:
+                element.innerHTML = nearBombs;
+                element.classList.add('five');
+                break;
+            case 6:
+                element.innerHTML = nearBombs;
+                element.classList.add('six');
+                break;
+            case 7:
+                element.innerHTML = nearBombs;
+                element.classList.add('seven');
+                break;
+            case 8:
+                element.innerHTML = nearBombs;
+                element.classList.add('eight');
+                break;
+        }
+    }else {
+        element.innerHTML = 'BOMB';
+    }
+
 }
 
 
@@ -107,6 +153,7 @@ const className = 'box';
 const container = '.board';
 const level = document.getElementById('level');
 const playBtn = document.getElementById('play-btn');
+let hasClicked = false;
 
 createHtmlElement(element, className, levelConverterInNumber(level.value),container);
 
@@ -123,7 +170,18 @@ const boxes = document.querySelectorAll('.box');
 
 for(let i = 0; i < boxes.length; i++){
     boxes[i].addEventListener('click', ()=>{
-        
+        let bombsArray = [];
+        let nearBombs = 0;
+        let impactedBomb = false;
+        if(!hasClicked){
+            hasClicked = true;
+            bombsArray = [...createBombsArray(boxes.length, i)];
+            nearBombs = checkNearBombs(i, bombsArray);
+            console.log(bombsArray);
+            console.log(nearBombs);
+        }else{
+            impactedBomb = isCoincident(i, bombsArray);
+        }
     });
 }
 

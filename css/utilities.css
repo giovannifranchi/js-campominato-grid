@@ -63,3 +63,39 @@ select {
     width: calc(100% / 7);
     height: calc(100% / 7);
 }
+
+.empty {
+    background-color: lightgrey;
+}
+
+.one {
+    color: red;
+}
+
+.two {
+    color: aqua;
+}
+
+.three {
+    color: yellow;
+}
+
+.four {
+    color: purple
+}
+
+.five {
+    color: brown;
+}
+
+.six {
+    color: gold;
+}
+
+.seven {
+    color: pink;
+}
+
+.eight {
+    color: black;
+}
