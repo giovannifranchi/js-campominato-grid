@@ -34,3 +34,30 @@ select {
     background-color: lightgray;
     border-radius: 0.3125rem;
 }
+
+.board {
+    width: 31.25rem;
+    height: 31.25rem;
+    border: 1px solid #000;
+}
+
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.easy {
+    width: calc(100% / 10);
+    height: calc(100% / 10);
+}
+
+.meadium {
+    width: calc(100% / 9);
+    height: calc(100% / 9);
+}
+
+.hard {
+    width: calc(100% / 7);
+    height: calc(100% / 7);
+}
