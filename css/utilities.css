@@ -38,13 +38,15 @@ select {
 .board {
     width: 31.25rem;
     height: 31.25rem;
-    border: 1px solid #000;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .box {
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid black;
 }
 
 .easy {
@@ -52,7 +54,7 @@ select {
     height: calc(100% / 10);
 }
 
-.meadium {
+.medium {
     width: calc(100% / 9);
     height: calc(100% / 9);
 }
