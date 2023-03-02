@@ -50,9 +50,14 @@ function createLeftBorder(arrayLenght){
     return leftBorderArray;
 }
 
-// function createRightBorder(arrayLenght){
-//     const yRatio = 
-// }
+function createRightBorder(arrayLenght){
+    const yRatio = Math.sqrt(arrayLenght);
+    let rightBorderArray = [];
+    for(let i = yRatio - 1; i < arrayLenght; i += yRatio){
+        rightBorderArray.push(i);
+    }
+    return rightBorderArray;
+}
 
 
 function checkNearBombs(input, controlList){
