@@ -21,7 +21,7 @@ function levelConverterInNumber(input){
 function createHtmlElement(element, className, quantity = 10, container){
     const fragment = document.createDocumentFragment();
     const gameContainer = document.querySelector(container);
-    for(let i = 1; i <= Math.pow(quantity, 2) ;i++){
+    for(let i = 0; i < Math.pow(quantity, 2); i++){
         let newElement = document.createElement(element);
         newElement.classList.add(className);
         newElement.innerHTML = i;
@@ -42,6 +42,48 @@ function createHtmlElement(element, className, quantity = 10, container){
 }
 
 
+function checkNearBombs(input, controlList){
+    const yRatio = levelConverterInNumber(level.value);
+    const xRatio = 1;
+    let nearBombs = 0;
+    if(controlList.includes(input - yRatio - xRatio)){
+        nearBombs++;
+    }
+    if(controlList.includes(input - yRatio)){
+        nearBombs++;
+    }
+    if(controlList.includes(input - yRatio + xRatio)){
+        nearBombs++;
+    }
+    if(controlList.includes(input - xRatio)){
+        nearBombs++;
+    }
+    if(controlList.includes(input + xRatio)){
+        nearBombs++;
+    }
+    if(controlList.includes(input + yRatio - xRatio)){
+        nearBombs++;
+    }
+    if(controlList.includes(input + yRatio)){
+        nearBombs++;
+    }
+    if(controlList.includes(input + yRatio + xRatio)){
+        nearBombs++;
+    }
+    return nearBombs;
+}
+
+function generateRandomNum(min, max){
+    
+}
+
+function createBombs(number){
+    for(let i = 0; i < Math.floor(number / 5); i++){
+        console.log(0);
+    }
+}
+
+
 
 // PROGRAM
 
@@ -58,3 +100,18 @@ playBtn.addEventListener('click', ()=>{
     board.innerHTML = '';
     createHtmlElement(element, className, levelConverterInNumber(level.value),container);
 });
+
+const boxes = document.querySelectorAll('.box');
+
+
+
+
+for(let i = 0; i < boxes.length; i++){
+    boxes[i].addEventListener('click', ()=>{
+        
+    });
+}
+
+
+
+
