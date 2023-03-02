@@ -74,13 +74,21 @@ function checkNearBombs(input, controlList){
 }
 
 function generateRandomNum(min, max){
-    
+    const randomNum = Math.floor(Math.random() * (max - min) + min);
+    return randomNum;
 }
 
-function createBombs(number){
-    for(let i = 0; i < Math.floor(number / 5); i++){
-        console.log(0);
+function createBombsArray(arrayLenght){
+    const bombsArray = [];
+    for(let i = 0; i < Math.floor(arrayLenght / 5); i++){
+        const newBomb = generateRandomNum(0, arrayLenght - 1);
+        if(bombsArray.includes(newBomb)){
+            i--;
+        }else{
+            bombsArray.push(newBomb);
+        }
     }
+    return bombsArray;
 }
 
 
@@ -111,6 +119,8 @@ for(let i = 0; i < boxes.length; i++){
         
     });
 }
+
+
 
 
 
