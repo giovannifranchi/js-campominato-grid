@@ -59,34 +59,131 @@ function createRightBorder(arrayLenght){
     return rightBorderArray;
 }
 
+function createTopBorder(arrayLenght){
+    const xRatio = 1;
+    const yRatio = Math.sqrt(arrayLenght);
+    let topBorderArray = [];
+    for(let i = 0; i < yRatio; i += xRatio){
+        topBorderArray.push(i);
+    }
+    return topBorderArray;
+}
 
-function checkNearBombs(input, controlList){
+function createBottomBorder(arrayLenght){
+    const xRatio = 1;
+    const yRatio = Math.sqrt(arrayLenght);
+    let bottomBorderArray = [];
+    for(let i = yRatio * (yRatio - xRatio); i < arrayLenght; i += xRatio){
+        bottomBorderArray.push(i);
+    }
+    return bottomBorderArray;
+}
+
+function checkNearBombs(input, controlList, borderRight, borderLeft, borderTop, borderBottom){
     const yRatio = levelConverterInNumber(level.value);
     const xRatio = 1;
     let nearBombs = 0;
-    if(controlList.includes(input - yRatio - xRatio)){
-        nearBombs++;
-    }
-    if(controlList.includes(input - yRatio)){
-        nearBombs++;
-    }
-    if(controlList.includes(input - yRatio + xRatio)){
-        nearBombs++;
-    }
-    if(controlList.includes(input - xRatio)){
-        nearBombs++;
-    }
-    if(controlList.includes(input + xRatio)){
-        nearBombs++;
-    }
-    if(controlList.includes(input + yRatio - xRatio)){
-        nearBombs++;
-    }
-    if(controlList.includes(input + yRatio)){
-        nearBombs++;
-    }
-    if(controlList.includes(input + yRatio + xRatio)){
-        nearBombs++;
+    if(borderLeft.includes(input)){
+        if(borderTop.includes(input)){
+            if(controlList.includes(input + xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + yRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + yRatio + xRatio)){
+                nearBombs++;
+            }
+        }else if(borderBottom.includes(input)){
+            if(controlList.includes(input - yRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input - yRatio +xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + xRatio)){
+                nearBombs++;
+            }
+        }else {
+            if(controlList.includes(input - yRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input - yRatio + xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + yRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + xRatio + yRatio)){
+                nearBombs++;
+            }
+        }
+    }else if(borderRight.includes(input)){
+        if(borderTop.includes(input)){
+            if(controlList.includes(input - yRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + yRatio - xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + yRatio)){
+                nearBombs++;
+            }
+        }else if(borderBottom.includes(input)){
+            if(controlList.includes(input - yRatio - xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input - xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input - yRatio)){
+                nearBombs++;
+            }
+        }else {
+            if(controlList.includes(input - yRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input - yRatio - xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input - xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + yRatio - xRatio)){
+                nearBombs++;
+            }
+            if(controlList.includes(input + yRatio)){
+                nearBombs++;
+            }
+        }
+    }else {
+        if(controlList.includes(input - yRatio - xRatio)){
+            nearBombs++;
+        }
+        if(controlList.includes(input - yRatio)){
+            nearBombs++;
+        }
+        if(controlList.includes(input - yRatio + xRatio)){
+            nearBombs++;
+        }
+        if(controlList.includes(input - xRatio)){
+            nearBombs++;
+        }
+        if(controlList.includes(input + xRatio)){
+            nearBombs++;
+        }
+        if(controlList.includes(input + yRatio - xRatio)){
+            nearBombs++;
+        }
+        if(controlList.includes(input + yRatio)){
+            nearBombs++;
+        }
+        if(controlList.includes(input + yRatio + xRatio)){
+            nearBombs++;
+        }
     }
     return nearBombs;
 }
@@ -183,6 +280,10 @@ playBtn.addEventListener('click', ()=>{
 });
 
 const boxes = document.querySelectorAll('.box');
+const rightBorder = createRightBorder(boxes.length);
+const leftBorder = createLeftBorder(boxes.length);
+const topBorder = createTopBorder(boxes.length);
+const bottomBorder = createBottomBorder(boxes.length);
 
 for(let i = 0; i < boxes.length; i++){
     boxes[i].addEventListener('click', ()=>{
@@ -191,10 +292,10 @@ for(let i = 0; i < boxes.length; i++){
         if(!hasClicked){
             hasClicked = true;
             bombsArray = [...createBombsArray(boxes.length, i)];
-            nearBombs = checkNearBombs(i, bombsArray);
+            nearBombs = checkNearBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
         }else{
             impactedBomb = isCoincident(i, bombsArray);
-            nearBombs = checkNearBombs(i, bombsArray);
+            nearBombs = checkNearBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
         }
         draw(i, boxes, nearBombs, impactedBomb);
     });
@@ -202,6 +303,30 @@ for(let i = 0; i < boxes.length; i++){
 
 
 
-
+// if(controlList.includes(input - yRatio - xRatio)){
+//     nearBombs++;
+// }
+// if(controlList.includes(input - yRatio)){
+//     nearBombs++;
+// }
+// if(controlList.includes(input - yRatio + xRatio)){
+//     nearBombs++;
+// }
+// if(controlList.includes(input - xRatio)){
+//     nearBombs++;
+// }
+// if(controlList.includes(input + xRatio)){
+//     nearBombs++;
+// }
+// if(controlList.includes(input + yRatio - xRatio)){
+//     nearBombs++;
+// }
+// if(controlList.includes(input + yRatio)){
+//     nearBombs++;
+// }
+// if(controlList.includes(input + yRatio + xRatio)){
+//     nearBombs++;
+// }
+// return nearBombs;
 
 
