@@ -73,6 +73,13 @@ function checkNearBombs(input, controlList){
     return nearBombs;
 }
 
+function isCoincident(input, controlList){
+    if(controlList.includes(input)){
+        return true;
+    }
+    return false;
+}
+
 function generateRandomNum(min, max){
     const randomNum = Math.floor(Math.random() * (max - min) + min);
     return randomNum;
