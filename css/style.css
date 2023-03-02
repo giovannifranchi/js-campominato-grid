@@ -36,5 +36,10 @@ main {
     background-color: aquamarine;
 }
 
+.right-area {
+    margin-left: auto;
+    gap: 0 0.625rem;
+}
+
 
 
