@@ -24,7 +24,7 @@ function createHtmlElement(element, className, quantity = 10, container){
     for(let i = 0; i < Math.pow(quantity, 2); i++){
         let newElement = document.createElement(element);
         newElement.classList.add(className);
-        newElement.innerHTML = i;
+        // newElement.innerHTML = i;
         switch (quantity){
             case 10:
                 newElement.classList.add('easy');
@@ -40,6 +40,19 @@ function createHtmlElement(element, className, quantity = 10, container){
     }
     gameContainer.append(fragment);
 }
+
+function createLeftBorder(arrayLenght){
+    const yRatio = Math.sqrt(arrayLenght);
+    let leftBorderArray = [];
+    for(let i = 0; i < arrayLenght; i+= yRatio){
+        leftBorderArray.push(i);
+    }
+    return leftBorderArray;
+}
+
+// function createRightBorder(arrayLenght){
+//     const yRatio = 
+// }
 
 
 function checkNearBombs(input, controlList){
@@ -154,6 +167,7 @@ const container = '.board';
 const level = document.getElementById('level');
 const playBtn = document.getElementById('play-btn');
 let hasClicked = false;
+let bombsArray = [];
 
 createHtmlElement(element, className, levelConverterInNumber(level.value),container);
 
@@ -165,23 +179,19 @@ playBtn.addEventListener('click', ()=>{
 
 const boxes = document.querySelectorAll('.box');
 
-
-
-
 for(let i = 0; i < boxes.length; i++){
     boxes[i].addEventListener('click', ()=>{
-        let bombsArray = [];
         let nearBombs = 0;
         let impactedBomb = false;
         if(!hasClicked){
             hasClicked = true;
             bombsArray = [...createBombsArray(boxes.length, i)];
             nearBombs = checkNearBombs(i, bombsArray);
-            console.log(bombsArray);
-            console.log(nearBombs);
         }else{
             impactedBomb = isCoincident(i, bombsArray);
+            nearBombs = checkNearBombs(i, bombsArray);
         }
+        draw(i, boxes, nearBombs, impactedBomb);
     });
 }
 
