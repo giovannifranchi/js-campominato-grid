@@ -79,6 +79,7 @@ function createBottomBorder(arrayLenght){
     return bottomBorderArray;
 }
 
+
 function checkNearBombs(input, controlList, borderRight, borderLeft, borderTop, borderBottom){
     const yRatio = levelConverterInNumber(level.value);
     const xRatio = 1;
@@ -188,6 +189,8 @@ function checkNearBombs(input, controlList, borderRight, borderLeft, borderTop, 
     return nearBombs;
 }
 
+
+
 function isCoincident(input, controlList){
     if(controlList.includes(input)){
         return true;
@@ -259,6 +262,63 @@ function draw(input, elementArray, nearBombs, isCoincident){
 
 }
 
+//Gives the Reference Array to each input in oder to check around
+
+function checkAround(input, borderRight, borderLeft, borderTop, borderBottom){
+    const yRatio =  borderBottom.length;
+    const xRatio = 1;
+    const top = input - yRatio;
+    const topRight = input - yRatio;
+    const right = input + xRatio;
+    const rightBottom = input + yRatio + xRatio;
+    const bottom = input + yRatio;
+    const bottomLeft = input +yRatio - xRatio;
+    const left = input - xRatio;
+    const leftTop = input - xRatio - yRatio;
+    let referenceArray = [top, topRight, right, rightBottom, bottom, bottomLeft, left, leftTop];
+    if(borderLeft.includes(input)){
+        if(borderTop.includes(input)){
+            const newArray = [right, rightBottom, bottom]
+            referenceArray = [...newArray];
+        }else if(borderBottom.includes(input)){
+            const newArray = [top, topRight, right];
+            referenceArray = [...newArray];
+        }else {
+            const newArray = [top, topRight, right, rightBottom, bottom];
+            referenceArray = [...newArray];
+        }
+    }else if(borderRight.includes(input)){
+        if(borderTop.includes(input)){
+            const newArray = [left, bottomLeft, bottom];
+            referenceArray = [...newArray];
+        }else if(borderBottom.includes(input)){
+            const newArray = [top, leftTop, left]; 
+            referenceArray = [...newArray];
+        }else{
+            const newArray = [top, leftTop, left, bottomLeft, bottom];
+            referenceArray = [...newArray];
+        }
+    }else if(borderTop.includes(input)){
+        const newArray = [left, bottomLeft, bottom, rightBottom, right];
+        referenceArray = [...newArray];
+    }else if(borderBottom.includes(input)){
+        const newArray = [left, leftTop, top, topRight, right];
+        referenceArray = [...newArray];
+    }
+    return referenceArray;
+}
+
+function newCheckBombs(input, controlList, borderRight, borderLeft, borderTop, borderBottom){
+    let newBombs = 0;
+    const referenceArray = checkAround(input,borderRight, borderLeft, borderTop, borderBottom);
+    for(let i = 0; i < referenceArray.length; i++){
+        if(controlList.includes(referenceArray[i])){
+            newBombs++;
+        }
+    }
+    return newBombs;
+}
+
 
 
 // PROGRAM
@@ -277,29 +337,35 @@ playBtn.addEventListener('click', ()=>{
     const board = document.querySelector('.board');
     board.innerHTML = '';
     createHtmlElement(element, className, levelConverterInNumber(level.value),container);
+    game();
 });
 
-const boxes = document.querySelectorAll('.box');
-const rightBorder = createRightBorder(boxes.length);
-const leftBorder = createLeftBorder(boxes.length);
-const topBorder = createTopBorder(boxes.length);
-const bottomBorder = createBottomBorder(boxes.length);
 
-for(let i = 0; i < boxes.length; i++){
-    boxes[i].addEventListener('click', ()=>{
-        let nearBombs = 0;
-        let impactedBomb = false;
-        if(!hasClicked){
-            hasClicked = true;
-            bombsArray = [...createBombsArray(boxes.length, i)];
-            nearBombs = checkNearBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
-        }else{
-            impactedBomb = isCoincident(i, bombsArray);
-            nearBombs = checkNearBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
-        }
-        draw(i, boxes, nearBombs, impactedBomb);
-    });
+function game(){
+    const boxes = document.querySelectorAll('.box');
+    const rightBorder = createRightBorder(boxes.length);
+    const leftBorder = createLeftBorder(boxes.length);
+    const topBorder = createTopBorder(boxes.length);
+    const bottomBorder = createBottomBorder(boxes.length);
+
+    for(let i = 0; i < boxes.length; i++){
+        boxes[i].addEventListener('click', ()=>{
+            let nearBombs = 0;
+            let impactedBomb = false;
+            if(!hasClicked){
+                hasClicked = true;
+                bombsArray = [...createBombsArray(boxes.length, i)];
+                nearBombs = checkNearBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
+            }else{
+                impactedBomb = isCoincident(i, bombsArray);
+                nearBombs = checkNearBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
+            }
+            draw(i, boxes, nearBombs, impactedBomb);
+        });
+    }
 }
+
+game();
 
 
 
