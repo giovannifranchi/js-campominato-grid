@@ -80,116 +80,6 @@ function createBottomBorder(arrayLenght){
 }
 
 
-function checkNearBombs(input, controlList, borderRight, borderLeft, borderTop, borderBottom){
-    const yRatio = levelConverterInNumber(level.value);
-    const xRatio = 1;
-    let nearBombs = 0;
-    if(borderLeft.includes(input)){
-        if(borderTop.includes(input)){
-            if(controlList.includes(input + xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + yRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + yRatio + xRatio)){
-                nearBombs++;
-            }
-        }else if(borderBottom.includes(input)){
-            if(controlList.includes(input - yRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input - yRatio +xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + xRatio)){
-                nearBombs++;
-            }
-        }else {
-            if(controlList.includes(input - yRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input - yRatio + xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + yRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + xRatio + yRatio)){
-                nearBombs++;
-            }
-        }
-    }else if(borderRight.includes(input)){
-        if(borderTop.includes(input)){
-            if(controlList.includes(input - yRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + yRatio - xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + yRatio)){
-                nearBombs++;
-            }
-        }else if(borderBottom.includes(input)){
-            if(controlList.includes(input - yRatio - xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input - xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input - yRatio)){
-                nearBombs++;
-            }
-        }else {
-            if(controlList.includes(input - yRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input - yRatio - xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input - xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + yRatio - xRatio)){
-                nearBombs++;
-            }
-            if(controlList.includes(input + yRatio)){
-                nearBombs++;
-            }
-        }
-    }else {
-        if(controlList.includes(input - yRatio - xRatio)){
-            nearBombs++;
-        }
-        if(controlList.includes(input - yRatio)){
-            nearBombs++;
-        }
-        if(controlList.includes(input - yRatio + xRatio)){
-            nearBombs++;
-        }
-        if(controlList.includes(input - xRatio)){
-            nearBombs++;
-        }
-        if(controlList.includes(input + xRatio)){
-            nearBombs++;
-        }
-        if(controlList.includes(input + yRatio - xRatio)){
-            nearBombs++;
-        }
-        if(controlList.includes(input + yRatio)){
-            nearBombs++;
-        }
-        if(controlList.includes(input + yRatio + xRatio)){
-            nearBombs++;
-        }
-    }
-    return nearBombs;
-}
-
-
 
 function isCoincident(input, controlList){
     if(controlList.includes(input)){
@@ -216,7 +106,7 @@ function createBombsArray(arrayLenght, input){
     return bombsArray;
 }
 
-function draw(input, elementArray, nearBombs, isCoincident){
+function draw(input, elementArray, nearBombs, isCoincident, newEmpty){
     const element = elementArray[input];
     if(!isCoincident){
         switch(nearBombs){
@@ -259,7 +149,11 @@ function draw(input, elementArray, nearBombs, isCoincident){
     }else {
         element.innerHTML = 'BOMB';
     }
-
+    if(newEmpty.length > 0){
+        for(let i = 0; i < newEmpty.length; i++){
+            elementArray[newEmpty[i]].classList.add('empty');
+        }
+    }
 }
 
 //Gives the Reference Array to each input in oder to check around
@@ -319,6 +213,17 @@ function newCheckBombs(input, controlList, borderRight, borderLeft, borderTop, b
     return newBombs;
 }
 
+function checkAroundEmpty(input, controlList, borderRight, borderLeft, borderTop, borderBottom){
+    let newEmpty = [];
+    const referenceArray = checkAround(input,borderRight, borderLeft, borderTop, borderBottom);
+    for(let i = 0; i < referenceArray.length; i++){
+        if(newCheckBombs(referenceArray[i], controlList, borderRight, borderLeft, borderTop, borderBottom) === 0){
+            newEmpty.push(referenceArray[i]);
+        }
+    }
+    return newEmpty;
+}
+
 
 
 // PROGRAM
@@ -352,15 +257,22 @@ function game(){
         boxes[i].addEventListener('click', ()=>{
             let nearBombs = 0;
             let impactedBomb = false;
+            let newEmpty = [];
             if(!hasClicked){
                 hasClicked = true;
                 bombsArray = [...createBombsArray(boxes.length, i)];
-                nearBombs = checkNearBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
+                nearBombs = newCheckBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
+                if(nearBombs === 0){
+                    newEmpty = [...checkAroundEmpty(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder)]
+                }
             }else{
                 impactedBomb = isCoincident(i, bombsArray);
-                nearBombs = checkNearBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
+                nearBombs = newCheckBombs(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder);
+                if(nearBombs === 0){
+                    newEmpty = [...checkAroundEmpty(i, bombsArray,rightBorder, leftBorder, topBorder, bottomBorder)]
+                }
             }
-            draw(i, boxes, nearBombs, impactedBomb);
+            draw(i, boxes, nearBombs, impactedBomb, newEmpty);
         });
     }
 }
